@@ -10,5 +10,5 @@ public abstract class Jogo {
 
 
 
-    public double calculaAluguel(){return 0;}
+    public abstract double calculaAluguel();
 }
