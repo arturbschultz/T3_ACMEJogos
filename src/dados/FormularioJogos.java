@@ -1,6 +1,8 @@
 package dados;
 import javax.swing.*;
 import java.awt.*;
-public class FormularioJogos {
+
+// Arthur
+public class FormularioJogos extends JFrame {
     public FormularioJogos(){}
 }
