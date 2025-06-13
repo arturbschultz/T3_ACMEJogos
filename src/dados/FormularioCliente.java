@@ -5,7 +5,8 @@ import java.awt.*;
 //eu
 public class FormularioCliente extends JFrame {
     private JTextField campoTextoNome, campoTextoEndereco, campoTextoNumero;
-    private JButton botaoEnviar, botaoCancelar, botaoLimparCamposTexto;
+    private JButton botaoEnviar, botaoCancelar, botaoLimparCamposTexto, botaoMostrarDados;
+    private JTextArea areaTexto;
 
 
     public FormularioCliente(){
@@ -26,7 +27,9 @@ public class FormularioCliente extends JFrame {
          * Número de cadastro:
          *  *caixa de texto*
          *
-         *   /ENVIAR/  /CANCELAR/  /LIMPAR DADOS/
+         *   /ENVIAR/  /CANCELAR/  /LIMPAR DADOS/  /MOSTRAR DADOS/
+         *
+         * Mensagens ao cliente:
          * ---------------------------------------
          *
          * nome pode repetir, endereço tambem, numero nao.
@@ -35,7 +38,7 @@ public class FormularioCliente extends JFrame {
 
         super();
         setTitle("Cadastro de Clientes");
-        setSize(590,300);
+        setSize(590,600);
 
         // Painel principal da janela
         JPanel painelPrincipal = new JPanel();
@@ -90,13 +93,34 @@ public class FormularioCliente extends JFrame {
             campoTextoEndereco.setText("");
             campoTextoNumero.setText("");
         });
+        //
+
+        botaoMostrarDados = new JButton("Mostrar Dados");
+        botaoMostrarDados.addActionListener(e -> {
+
+        });
+
+
         painelBotoes.add(botaoLimparCamposTexto);
         painelBotoes.add(botaoEnviar);
         painelBotoes.add(botaoCancelar);
+        painelBotoes.add(botaoMostrarDados);
+
+        JPanel painelRotuloMensagens = new JPanel();
+        FlowLayout layoutMensagens = new FlowLayout(FlowLayout.LEFT);
+        painelRotuloMensagens.setLayout(layoutMensagens);
+        JLabel labelMensagens = new JLabel("Mensagens");
+        painelRotuloMensagens.add(labelMensagens);
+
+        // Painel intermediario para a area de texto (com scroll)
+        areaTexto = new JTextArea(5,47);
+        JScrollPane painelAreaTexto = new JScrollPane(areaTexto);
 
         painelPrincipal.add(painelRotulo);
         painelPrincipal.add(painelCampoTexto);
         painelPrincipal.add(painelBotoes);
+        painelPrincipal.add(painelRotuloMensagens);
+        painelPrincipal.add(painelAreaTexto);
 
         this.add(painelPrincipal);
 
