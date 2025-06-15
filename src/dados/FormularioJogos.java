@@ -12,11 +12,14 @@ public class FormularioJogos extends JFrame {
     private JTextArea areaTexto;
     private JPanel painelEletronico;
     private JPanel painelMesa;
+    private CatalogoJogos jogos;
+    private CatalogoJogos catalogo;
 
     public FormularioJogos() {
         super();
         setTitle("Cadastro de Jogos");
         setSize(590, 700);
+        catalogo = new CatalogoJogos();
 
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
@@ -87,6 +90,7 @@ public class FormularioJogos extends JFrame {
         
         botaoEnviar = new JButton("Enviar");
         botaoEnviar.addActionListener(e -> {
+            cadastrarJogo();
         });
         
         botaoCancelar = new JButton("Cancelar");
@@ -98,7 +102,7 @@ public class FormularioJogos extends JFrame {
         botaoLimparCamposTexto.addActionListener(e -> {
             limparCampos();
         });
-        // Colocando esse comentario pq deu um problema com a hierarquia dos commits
+        
         botaoMostrarDados = new JButton("Mostrar Dados");
         botaoMostrarDados.addActionListener(e -> {
         });
@@ -131,6 +135,122 @@ public class FormularioJogos extends JFrame {
         this.add(painelPrincipal);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private void cadastrarJogo() {
+        // validar os campos básicos
+        if (!validarCamposBasicos()) {
+            return;
+        }
+
+        // Obter os valores basicos
+        int codigo = Integer.parseInt(campoTextoCodigo.getText());
+        String nome = campoTextoNome.getText();
+        double valorBase = Double.parseDouble(campoTextoValorBase.getText());
+
+        // Criar o jogo baseado no tipo selecionado
+        Jogo jogo = criarJogo(codigo, nome, valorBase);
+        if (jogo == null) {
+            return; // Se retornou null, significa que houve erro na criação do jogo
+        }
+
+        // Tenta adicionar ao catálogo
+        if (catalogo.addJogo(jogo)) {
+            limparCampos();
+            areaTexto.setText("Jogo cadastrado com sucesso!\n");
+        } else {
+            areaTexto.append("Erro: já existe um jogo com este código.\n");
+            campoTextoCodigo.setText("");
+        }
+    }
+
+    // Valida os campos basicos
+    private boolean validarCamposBasicos() {
+        try {
+            // Valida código
+            if (campoTextoCodigo.getText().isEmpty()) {
+                areaTexto.append("Erro: o campo \"Código\" está vazio.\n");
+                return false;
+            }
+            Integer.parseInt(campoTextoCodigo.getText()); // Testa se é número válido
+
+            // Valida nome
+            if (campoTextoNome.getText().isEmpty()) {
+                areaTexto.append("Erro: o campo \"Nome\" está vazio.\n");
+                return false;
+            }
+
+            // Valida valor base
+            if (campoTextoValorBase.getText().isEmpty()) {
+                areaTexto.append("Erro: o campo \"Valor Base\" está vazio.\n");
+                return false;
+            }
+            Double.parseDouble(campoTextoValorBase.getText()); // Testa se é número válido
+
+            return true;
+        } catch (NumberFormatException e) {
+            areaTexto.append("Erro: campos numéricos inválidos.\n");
+            return false;
+        }
+    }
+
+    // Método para criar o jogo específico
+    private Jogo criarJogo(int codigo, String nome, double valorBase) {
+        String tipoSelecionado = (String) campoTipoJogo.getSelectedItem();
+        
+        try {
+            if (tipoSelecionado.equals("Eletrônico")) {
+                return criarJogoEletronico(codigo, nome, valorBase);
+            } else {
+                return criarJogoMesa(codigo, nome, valorBase);
+            }
+        } catch (Exception e) {
+            areaTexto.append("Erro ao criar jogo: " + e.getMessage() + "\n");
+            return null;
+        }
+    }
+
+    // Método para criar jogo eletrônico
+    private JogoEletronico criarJogoEletronico(int codigo, String nome, double valorBase) {
+        // Validar campos específicos
+        if (campoTextoPlataforma.getText().isEmpty()) {
+            areaTexto.append("Erro: o campo \"Plataforma\" está vazio.\n");
+            return null;
+        }
+
+        // Cria e retorna o jogo
+        return new JogoEletronico(
+            codigo,
+            nome,
+            valorBase,
+            (TipoEletronico) campoEletronico.getSelectedItem(),
+            campoTextoPlataforma.getText()
+        );
+    }
+
+    // Método para criar jogo de mesa
+    private JogoMesa criarJogoMesa(int codigo, String nome, double valorBase) {
+        // Validar campos específicos
+        if (campoTextoNumeroPecas.getText().isEmpty()) {
+            areaTexto.append("Erro: o campo \"Número de Peças\" está vazio.\n");
+            return null;
+        }
+
+        try {
+            int numeroPecas = Integer.parseInt(campoTextoNumeroPecas.getText());
+            
+            // Criar e retornar o jogo
+            return new JogoMesa(
+                codigo,
+                nome,
+                valorBase,
+                (TipoMesa) campoMesa.getSelectedItem(),
+                numeroPecas
+            );
+        } catch (NumberFormatException e) {
+            areaTexto.append("Erro: número de peças inválido.\n");
+            return null;
+        }
     }
 
     private void atualizarCamposEspecificos() {
