@@ -9,6 +9,7 @@ public class FormularioCliente extends JFrame {
     private JTextArea areaTexto;
     private JComboBox<String> campoTipoCliente;
     private JPanel painelCampoTexto, painelCampoTexto2, painelCampoTexto3, painelCampoTexto4, painelCampoTexto5;
+    private Clientela clientela;
 
     public FormularioCliente(){
         /**
@@ -16,6 +17,7 @@ public class FormularioCliente extends JFrame {
          */
 
         super();
+        clientela = new Clientela();
         setTitle("Cadastro de Clientes");
         setSize(590,1200);
 
@@ -83,7 +85,7 @@ public class FormularioCliente extends JFrame {
         painelBotoes.setLayout(layoutBotoes);
         botaoEnviar = new JButton("Enviar");
         botaoEnviar.addActionListener(e -> {
-
+            cadastrarCliente();
         });
         botaoCancelar = new JButton("Cancelar");
         botaoCancelar.addActionListener(e -> {
@@ -148,5 +150,33 @@ public class FormularioCliente extends JFrame {
         campoTextoEndereco.setText("");
         campoTextoNumero.setText("");
         areaTexto.setText("");
+    }
+
+    public void cadastrarCliente(){
+        try {
+            String nome = campoTextoNome.getText();
+            String endereco = campoTextoEndereco.getText();
+            int numero = Integer.parseInt(campoTextoNumero.getText());
+            if (nome.isEmpty() || endereco.isEmpty()) {
+                if (nome.isEmpty()) {
+                    areaTexto.append("Erro: o campo \"Nome completo\" esta vazio.\n");
+                }
+                if (endereco.isEmpty()) {
+                    areaTexto.append("Erro: o campo \"Endereço\" esta vazio.\n");
+                }
+            } else {
+                Cliente cliente = new Cliente(numero, nome, endereco);
+                if (clientela.addCliente(cliente)) {
+                    limparCampos();
+                    areaTexto.setText("Cliente cadastrado com sucesso.\n");
+                } else {
+                    areaTexto.append("Erro: este numero ja foi cadastrado por outro cliente.\n");
+                    campoTextoNumero.setText("");
+                }
+            }
+        }
+        catch(NumberFormatException e){
+            areaTexto.append("Erro: o campo \"Numero de cadastro\" esta vazio.\n");
+        }
     }
 }

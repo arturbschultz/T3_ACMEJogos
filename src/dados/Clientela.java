@@ -5,9 +5,7 @@ import java.util.TreeMap;
 public class Clientela {
     private TreeMap<Integer, Cliente> clientela = new TreeMap<>();
 
-    public Clientela(TreeMap<Integer, Cliente> clientela) {
-        this.clientela = clientela;
-    }
+    public Clientela() {clientela = new TreeMap<>();}
 
     //getter
     public TreeMap<Integer, Cliente> getClientela() {return clientela;}
