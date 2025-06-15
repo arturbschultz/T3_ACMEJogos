@@ -4,41 +4,20 @@ import java.awt.*;
 
 //eu
 public class FormularioCliente extends JFrame {
-    private JTextField campoTextoNome, campoTextoEndereco, campoTextoNumero;
+    private JTextField campoTextoNome, campoTextoEndereco, campoTextoNumero, campoTextoNomeFantasia, campoTextoCnpj;
     private JButton botaoEnviar, botaoCancelar, botaoLimparCamposTexto, botaoMostrarDados;
     private JTextArea areaTexto;
-
+    private JComboBox<String> campoTipoCliente;
+    private JPanel painelCampoTexto, painelCampoTexto2, painelCampoTexto3, painelCampoTexto4, painelCampoTexto5;
 
     public FormularioCliente(){
         /**
-         * Fazer cliente escrever dados um a um.
-         *
-         * ---------------------------------------
-         * Titulo
-         *
-         * Por favor, digite as informações:
-         *
-         * Nome completo:
-         *  *caixa de texto*
-         *
-         * Endereço:
-         *  *caixa de texto*
-         *
-         * Número de cadastro:
-         *  *caixa de texto*
-         *
-         *   /ENVIAR/  /CANCELAR/  /LIMPAR DADOS/  /MOSTRAR DADOS/
-         *
-         * Mensagens ao cliente:
-         * ---------------------------------------
-         *
-         * nome pode repetir, endereço tambem, numero nao.
-         * se algum dado tiver erro, esvaziar a caixa de texto e mostrar o motivo do erro.
+         * d
          */
 
         super();
         setTitle("Cadastro de Clientes");
-        setSize(590,600);
+        setSize(590,1200);
 
         // Painel principal da janela
         JPanel painelPrincipal = new JPanel();
@@ -51,10 +30,19 @@ public class FormularioCliente extends JFrame {
         JLabel rotulo = new JLabel("Por favor, digite as informações:");
         painelRotulo.add(rotulo);
 
+        JPanel painelTipoCliente = new JPanel();
+        painelTipoCliente.setLayout(layoutRotulo);
+        JLabel labelTipoCliente = new JLabel("Tipo de Cliente: ");
+        String[] tiposCliente = {"Empresarial", "Individual"};
+        campoTipoCliente = new JComboBox<>(tiposCliente);
+        campoTipoCliente.addActionListener(e -> atualizarCamposEspecificos());
+        painelTipoCliente.add(labelTipoCliente);
+        painelTipoCliente.add(campoTipoCliente);
+
         // Painel intermediario para o campo de texto
         JPanel painelCampoTexto = new JPanel();
         FlowLayout layoutCampoTexto = new FlowLayout(FlowLayout.LEFT);
-        painelCampoTexto.setLayout(layoutCampoTexto);
+        painelCampoTexto.setLayout(layoutRotulo);
         JLabel labelNome = new JLabel("Nome completo:");
         campoTextoNome = new JTextField(40);
         painelCampoTexto.add(labelNome);
@@ -62,18 +50,32 @@ public class FormularioCliente extends JFrame {
 
         // Painel intermediario para o campo de texto
         JPanel painelCampoTexto2 = new JPanel();
-        painelCampoTexto2.setLayout(layoutCampoTexto);
+        painelCampoTexto2.setLayout(layoutRotulo);
         JLabel labelMensagem2 = new JLabel("Endereço: ");
         campoTextoEndereco = new JTextField(40);
-        painelCampoTexto.add(labelMensagem2);
-        painelCampoTexto.add(campoTextoEndereco);
+        painelCampoTexto2.add(labelMensagem2);
+        painelCampoTexto2.add(campoTextoEndereco);
 
         JPanel painelCampoTexto3 = new JPanel();
-        painelCampoTexto3.setLayout(layoutCampoTexto);
+        painelCampoTexto3.setLayout(layoutRotulo);
         JLabel labelMensagem3 = new JLabel("Numero de cadastro: ");
         campoTextoNumero = new JTextField(40);
-        painelCampoTexto.add(labelMensagem3);
-        painelCampoTexto.add(campoTextoNumero);
+        painelCampoTexto3.add(labelMensagem3);
+        painelCampoTexto3.add(campoTextoNumero);
+
+        painelCampoTexto4 = new JPanel();
+        painelCampoTexto4.setLayout(layoutRotulo);
+        JLabel labelMensagem4 = new JLabel("Nome fantasia:");
+        campoTextoNomeFantasia = new JTextField(40);
+        painelCampoTexto4.add(labelMensagem4);
+        painelCampoTexto4.add(campoTextoNomeFantasia);
+
+        painelCampoTexto5 = new JPanel();
+        painelCampoTexto5.setLayout(layoutRotulo);
+        JLabel labelMensagem5 = new JLabel("CNPJ:");
+        campoTextoCnpj = new JTextField(40);
+        painelCampoTexto5.add(labelMensagem5);
+        painelCampoTexto5.add(campoTextoCnpj);
 
         // Painel intermediario para os botoes
         JPanel painelBotoes = new JPanel();
@@ -89,9 +91,7 @@ public class FormularioCliente extends JFrame {
         });
         botaoLimparCamposTexto = new JButton("Limpar");
         botaoLimparCamposTexto.addActionListener(e -> {
-            campoTextoNome.setText("");
-            campoTextoEndereco.setText("");
-            campoTextoNumero.setText("");
+            limparCampos();
         });
         //
 
@@ -117,14 +117,36 @@ public class FormularioCliente extends JFrame {
         JScrollPane painelAreaTexto = new JScrollPane(areaTexto);
 
         painelPrincipal.add(painelRotulo);
+        painelPrincipal.add(painelTipoCliente);
         painelPrincipal.add(painelCampoTexto);
+        painelPrincipal.add(painelCampoTexto2);
+        painelPrincipal.add(painelCampoTexto3);
+        painelPrincipal.add(painelCampoTexto4);
+        painelPrincipal.add(painelCampoTexto5);
         painelPrincipal.add(painelBotoes);
         painelPrincipal.add(painelRotuloMensagens);
         painelPrincipal.add(painelAreaTexto);
 
         this.add(painelPrincipal);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private void atualizarCamposEspecificos() {
+        String tipoSelecionado = (String) campoTipoCliente.getSelectedItem();
+        if (tipoSelecionado.equals("Empresarial")) {
+            painelCampoTexto4.setVisible(true);
+            painelCampoTexto5.setVisible(true);
+        } else {
+            painelCampoTexto4.setVisible(false);
+            painelCampoTexto5.setVisible(false);
+        }
+    }
+
+    public void limparCampos(){
+        campoTextoNome.setText("");
+        campoTextoEndereco.setText("");
+        campoTextoNumero.setText("");
+        areaTexto.setText("");
     }
 }
