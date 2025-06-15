@@ -8,7 +8,7 @@ public class FormularioCliente extends JFrame {
     private JButton botaoEnviar, botaoCancelar, botaoLimparCamposTexto, botaoMostrarDados;
     private JTextArea areaTexto;
     private JComboBox<String> campoTipoCliente;
-    private JPanel painelCampoTexto4, painelCampoTexto5;
+    private JPanel painelCampoTexto, painelCampoTexto2, painelCampoTexto3, painelCampoTexto4, painelCampoTexto5;
 
     public FormularioCliente(){
         /**
@@ -33,7 +33,7 @@ public class FormularioCliente extends JFrame {
         JPanel painelTipoCliente = new JPanel();
         painelTipoCliente.setLayout(layoutRotulo);
         JLabel labelTipoCliente = new JLabel("Tipo de Cliente: ");
-        String[] tiposCliente = {"Individual", "Empresarial"};
+        String[] tiposCliente = {"Empresarial", "Individual"};
         campoTipoCliente = new JComboBox<>(tiposCliente);
         campoTipoCliente.addActionListener(e -> atualizarCamposEspecificos());
         painelTipoCliente.add(labelTipoCliente);
