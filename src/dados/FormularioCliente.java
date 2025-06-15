@@ -1,6 +1,8 @@
 package dados;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 //eu
 public class FormularioCliente extends JFrame {
@@ -83,10 +85,12 @@ public class FormularioCliente extends JFrame {
         JPanel painelBotoes = new JPanel();
         FlowLayout layoutBotoes = new FlowLayout(FlowLayout.RIGHT);
         painelBotoes.setLayout(layoutBotoes);
+
         botaoEnviar = new JButton("Enviar");
         botaoEnviar.addActionListener(e -> {
             cadastrarCliente();
         });
+
         botaoCancelar = new JButton("Cancelar");
         botaoCancelar.addActionListener(e -> {
             System.exit(0);        //por default 0 = sair.
@@ -95,11 +99,10 @@ public class FormularioCliente extends JFrame {
         botaoLimparCamposTexto.addActionListener(e -> {
             limparCampos();
         });
-        //
 
         botaoMostrarDados = new JButton("Mostrar Dados");
         botaoMostrarDados.addActionListener(e -> {
-
+            mostrarDados();
         });
 
 
@@ -145,14 +148,26 @@ public class FormularioCliente extends JFrame {
         }
     }
 
-    public void limparCampos(){
+    private void limparCampos(){
         campoTextoNome.setText("");
         campoTextoEndereco.setText("");
         campoTextoNumero.setText("");
+        campoTextoNomeFantasia.setText("");
+        campoTextoCnpj.setText("");
         areaTexto.setText("");
     }
 
-    public void cadastrarCliente(){
+    private void cadastrarCliente(){
+        String tipoSelecionado = (String) campoTipoCliente.getSelectedItem();
+        if(tipoSelecionado.equals("Empresarial")) {
+            cadastrarClienteEmpresarial();
+        }
+        else{
+            cadastrarClienteIndividual();
+        }
+    }
+
+    private void cadastrarClienteIndividual(){
         try {
             String nome = campoTextoNome.getText();
             String endereco = campoTextoEndereco.getText();
@@ -168,15 +183,61 @@ public class FormularioCliente extends JFrame {
                 Cliente cliente = new Cliente(numero, nome, endereco);
                 if (clientela.addCliente(cliente)) {
                     limparCampos();
-                    areaTexto.setText("Cliente cadastrado com sucesso.\n");
+                    areaTexto.setText("Cliente individual cadastrado com sucesso.\n");
                 } else {
                     areaTexto.append("Erro: este numero ja foi cadastrado por outro cliente.\n");
                     campoTextoNumero.setText("");
                 }
             }
-        }
-        catch(NumberFormatException e){
+        } catch(NumberFormatException e){
             areaTexto.append("Erro: o campo \"Numero de cadastro\" esta vazio.\n");
         }
+    }
+
+    private void cadastrarClienteEmpresarial(){
+        try {
+            String nome = campoTextoNome.getText();
+            String endereco = campoTextoEndereco.getText();
+            int numero = Integer.parseInt(campoTextoNumero.getText());
+            String nomeFantasia = campoTextoNomeFantasia.getText();
+            String cnpj = campoTextoCnpj.getText();
+            if (nome.isEmpty() || endereco.isEmpty() || nomeFantasia.isEmpty() || cnpj.isEmpty()) {
+                if (nome.isEmpty()) {
+                    areaTexto.append("Erro: o campo \"Nome completo\" esta vazio.\n");
+                }
+                if (endereco.isEmpty()) {
+                    areaTexto.append("Erro: o campo \"Endereço\" esta vazio.\n");
+                }
+                if(nomeFantasia.isEmpty()){
+                    areaTexto.append("Erro: o campo \"Nome fantasia\" esta vazio.\n");
+                }
+                if(cnpj.isEmpty()){
+                    areaTexto.append("Erro: o campo \"CNPJ\" esta vazio.\n");
+                }
+            } else {
+                Empresarial cliente = new Empresarial(numero, nome, endereco, nomeFantasia, cnpj);
+                if (clientela.addCliente(cliente)) {
+                    limparCampos();
+                    areaTexto.setText("Cliente empresarial cadastrado com sucesso.\n");
+                } else {
+                    areaTexto.append("Erro: este numero ja foi cadastrado por outro cliente.\n");
+                    campoTextoNumero.setText("");
+                }
+            }
+
+        } catch (NumberFormatException e){
+            areaTexto.append("Erro: o campo \"Numero de cadastro\" esta vazio.\n");
+        }
+    }
+
+    private void mostrarDados(){
+        TreeMap<Integer, Cliente> clientes = clientela.getClientela();
+        StringBuilder dados = new StringBuilder("Clientes ja cadastrados:\n");
+
+        for(Map.Entry<Integer, Cliente> clientela: clientes.entrySet()){
+            Cliente cliente = clientela.getValue();
+            dados.append(clientela.getKey()).append(" - ").append(cliente.getNome()).append(" - ").append(cliente.getEndereco()).append("\n");
+        }
+        areaTexto.setText(dados.toString());
     }
 }
