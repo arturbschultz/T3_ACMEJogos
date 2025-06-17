@@ -1,6 +1,7 @@
 package dados;
 import javax.swing.*;
 import java.awt.*;
+import java.util.TreeMap;
 
 public class FormularioJogos extends JFrame {
     private JTextField campoTextoNome, campoTextoCodigo, campoTextoValorBase;
@@ -66,6 +67,7 @@ public class FormularioJogos extends JFrame {
         campoEletronico = new JComboBox<>(TipoEletronico.values());
         JLabel labelPlataforma = new JLabel("Plataforma: ");
         campoTextoPlataforma = new JTextField(40);
+        campoTextoPlataforma.setToolTipText("Exemplo: PlayStation 5, Xbox Series X, PC, Nintendo Switch");
         painelEletronico.add(labelTipoEletronico);
         painelEletronico.add(campoEletronico);
         painelEletronico.add(labelPlataforma);
@@ -87,24 +89,25 @@ public class FormularioJogos extends JFrame {
         JPanel painelBotoes = new JPanel();
         FlowLayout layoutBotoes = new FlowLayout(FlowLayout.RIGHT);
         painelBotoes.setLayout(layoutBotoes);
-        
+
         botaoEnviar = new JButton("Enviar");
         botaoEnviar.addActionListener(e -> {
             cadastrarJogo();
         });
-        
+
         botaoCancelar = new JButton("Cancelar");
         botaoCancelar.addActionListener(e -> {
             System.exit(0);
         });
-        
+
         botaoLimparCamposTexto = new JButton("Limpar");
         botaoLimparCamposTexto.addActionListener(e -> {
             limparCampos();
         });
-        
+
         botaoMostrarDados = new JButton("Mostrar Dados");
         botaoMostrarDados.addActionListener(e -> {
+            mostrarDadosJogos();
         });
 
         painelBotoes.add(botaoLimparCamposTexto);
@@ -135,6 +138,7 @@ public class FormularioJogos extends JFrame {
         this.add(painelPrincipal);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+        atualizarCamposEspecificos();
     }
 
     private void cadastrarJogo() {
@@ -197,7 +201,7 @@ public class FormularioJogos extends JFrame {
     // Método para criar o jogo específico
     private Jogo criarJogo(int codigo, String nome, double valorBase) {
         String tipoSelecionado = (String) campoTipoJogo.getSelectedItem();
-        
+
         try {
             if (tipoSelecionado.equals("Eletrônico")) {
                 return criarJogoEletronico(codigo, nome, valorBase);
@@ -220,11 +224,11 @@ public class FormularioJogos extends JFrame {
 
         // Cria e retorna o jogo
         return new JogoEletronico(
-            codigo,
-            nome,
-            valorBase,
-            (TipoEletronico) campoEletronico.getSelectedItem(),
-            campoTextoPlataforma.getText()
+                codigo,
+                nome,
+                valorBase,
+                (TipoEletronico) campoEletronico.getSelectedItem(),
+                campoTextoPlataforma.getText()
         );
     }
 
@@ -238,14 +242,14 @@ public class FormularioJogos extends JFrame {
 
         try {
             int numeroPecas = Integer.parseInt(campoTextoNumeroPecas.getText());
-            
+
             // Criar e retornar o jogo
             return new JogoMesa(
-                codigo,
-                nome,
-                valorBase,
-                (TipoMesa) campoMesa.getSelectedItem(),
-                numeroPecas
+                    codigo,
+                    nome,
+                    valorBase,
+                    (TipoMesa) campoMesa.getSelectedItem(),
+                    numeroPecas
             );
         } catch (NumberFormatException e) {
             areaTexto.append("Erro: número de peças inválido.\n");
@@ -274,5 +278,37 @@ public class FormularioJogos extends JFrame {
         campoEletronico.setSelectedIndex(0);
         campoMesa.setSelectedIndex(0);
         areaTexto.setText("");
+    }
+
+    private void mostrarDadosJogos() {
+        TreeMap<Integer, Jogo> jogos = catalogo.getCatalogo();
+        if (jogos.isEmpty()) {
+            areaTexto.setText("Não há jogos cadastrados.\n");
+            return;
+        }
+
+        StringBuilder dados = new StringBuilder("Jogos Cadastrados:\n\n");
+        for (Jogo jogo : jogos.values()) {
+            dados.append("Código: ").append(jogo.getCodigo())
+                    .append("\nNome: ").append(jogo.getNome())
+                    .append("\nValor Base: R$").append(String.format("%.2f", jogo.getValorBase()));
+
+            if (jogo instanceof JogoEletronico) {
+                JogoEletronico jogoEletronico = (JogoEletronico) jogo;
+                dados.append("\nTipo: Eletrônico")
+                        .append("\nTipo Eletrônico: ").append(jogoEletronico.getTipo())
+                        .append("\nPlataforma: ").append(jogoEletronico.getPlataforma());
+            } else if (jogo instanceof JogoMesa) {
+                JogoMesa jogoMesa = (JogoMesa) jogo;
+                dados.append("\nTipo: Mesa")
+                        .append("\nTipo Mesa: ").append(jogoMesa.getTipo())
+                        .append("\nNúmero de Peças: ").append(jogoMesa.getNumeroPecas());
+            }
+
+            dados.append("\nValor do Aluguel: R$").append(String.format("%.2f", jogo.calculaAluguel()))
+                    .append("\n\n");
+        }
+
+        areaTexto.setText(dados.toString());
     }
 }
