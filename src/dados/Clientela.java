@@ -3,7 +3,7 @@ package dados;
 import java.util.TreeMap;
 
 public class Clientela {
-    private TreeMap<Integer, Cliente> clientela = new TreeMap<>();
+    private TreeMap<Integer, Cliente> clientela;
 
     public Clientela() {clientela = new TreeMap<>();}
 
