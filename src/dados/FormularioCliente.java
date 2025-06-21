@@ -10,7 +10,7 @@ public class FormularioCliente extends JFrame {
     private JButton botaoEnviar, botaoCancelar, botaoLimparCamposTexto, botaoMostrarDados;
     private JTextArea areaTexto;
     private JComboBox<String> campoTipoCliente;
-    private JPanel painelCampoTexto, painelCampoTexto2, painelCampoTexto3, painelCampoTexto4, painelCampoTexto5;
+    private JPanel painelCampoTexto4, painelCampoTexto5;
     private Clientela clientela;
 
     public FormularioCliente(){
@@ -21,7 +21,7 @@ public class FormularioCliente extends JFrame {
         super();
         clientela = new Clientela();
         setTitle("Cadastro de Clientes");
-        setSize(590,1200);
+        setSize(590,900);
 
         // Painel principal da janela
         JPanel painelPrincipal = new JPanel();
