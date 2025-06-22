@@ -12,6 +12,8 @@ public class FormularioAluguel extends JFrame {
     private Alugueis alugueis;
     private Clientela clientela;
     private CatalogoJogos catalogo;
+    private Cliente clienteSelecionado;
+    private Jogo jogoSelecionado;
 
     public FormularioAluguel() {
 
@@ -105,7 +107,7 @@ public class FormularioAluguel extends JFrame {
 
         JPanel painelCampoTexto3 = new JPanel();
         painelCampoTexto3.setLayout(layoutRotulo);
-        JLabel labelPeriodo = new JLabel("Periodo:");
+        JLabel labelPeriodo = new JLabel("Período (dias):");
         campoTextoPeriodo = new JTextField(40);
         painelCampoTexto3.add(labelPeriodo);
         painelCampoTexto3.add(campoTextoPeriodo);
@@ -131,7 +133,7 @@ public class FormularioAluguel extends JFrame {
 
         botaoMostrarDados = new JButton("Mostrar Dados");
         botaoMostrarDados.addActionListener(e -> {
-            mostrarClientes();
+            mostrarDadosAluguel();
         });
 
 
@@ -176,12 +178,12 @@ public class FormularioAluguel extends JFrame {
         setVisible(true);
     }
 
-
-    private void mostrarClientes(){
-        StringBuilder dados = clientela.mostrarDadosCliente();
-        areaTexto.setText(dados.toString());
-    }
-
+    /**
+     * private void mostrarClientes(){
+     *         StringBuilder dados = clientela.mostrarDadosCliente();
+     *         areaTexto.setText(dados.toString());
+     *     }
+     */
 
     /**
      *private void mostrarDadosJogos() {
@@ -219,12 +221,30 @@ public class FormularioAluguel extends JFrame {
 
     public void selecionarCliente(){
         //percorre a treemap de clientes e acha o cliente com o nome
-        String clienteSelect = (String) campoCliente.getSelectedItem();
+        String nomeCliente = (String) campoCliente.getSelectedItem();
+        if (nomeCliente == null) return;
+
+        for (Cliente cliente : clientela.getClientela().values()) {
+            if (cliente.getNome().equals(nomeCliente)) {
+                clienteSelecionado = cliente;
+                areaTexto.setText("Cliente selecionado:\n" + cliente.getNome()+" - "+ cliente.getNumero());
+                return;
+            }
+        }
     }
 
     public void selecionarJogo(){
         //percorre a treemap de jogos e acha o jogo pelo nome
-        String jogoSelect = (String) campoJogo.getSelectedItem();
+        String nomeJogo = (String) campoJogo.getSelectedItem();
+        if (nomeJogo == null) return;
+
+        for (Jogo jogo : catalogo.getCatalogo().values()) {
+            if (jogo.getNome().equals(nomeJogo)) {
+                jogoSelecionado = jogo;
+                areaTexto.setText("Jogo selecionado:\n" + jogo.getNome());
+                return;
+            }
+        }
     }
 
     public void cadastrarAluguel(){
@@ -233,6 +253,18 @@ public class FormularioAluguel extends JFrame {
 
     public void mostrarDadosAluguel(){
         //mostra os alugueis cadstrados q nem no  mostra clientes no form de clientes
+        TreeMap<Integer, Aluguel> mapaAlugueis = alugueis.getAlugueis();
+        if (mapaAlugueis.isEmpty()) {
+            areaTexto.setText("Não há aluguéis cadastrados.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("Lista de Aluguéis (ID Decrescente):\n\n");
+        // usei descendingMap pra iterar em ordem decrescente de chave
+        for (Aluguel aluguel : mapaAlugueis.descendingMap().values()) {
+            sb.append(aluguel.toString()).append("\n");
+        }
+        areaTexto.setText(sb.toString());
     }
 
     public void limparCampos(){
