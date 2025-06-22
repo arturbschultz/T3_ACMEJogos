@@ -1,6 +1,10 @@
 package dados;
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,6 +16,8 @@ public class FormularioAluguel extends JFrame {
     private Alugueis alugueis;
     private Clientela clientela;
     private CatalogoJogos catalogo;
+    private Cliente clienteSelecionado;
+    private Jogo jogoSelecionado;
 
     public FormularioAluguel() {
 
@@ -81,8 +87,8 @@ public class FormularioAluguel extends JFrame {
 
         JPanel painelCampoTexto3 = new JPanel();
         painelCampoTexto.setLayout(layoutRotulo);
-        JLabel labelPeriodo = new JLabel("Data Inicial:");
-        campoTextoPeriodo = new JTextField(40);
+        JLabel labelPeriodo = new JLabel("Período (dias):");
+        campoTextoPeriodo = new JTextField(38);
         painelCampoTexto.add(labelPeriodo);
         painelCampoTexto.add(campoTextoPeriodo);
 
@@ -190,11 +196,29 @@ public class FormularioAluguel extends JFrame {
      */
 
     public void selecionarCliente(){
-        //percorre a treemap de clientes e acha o cliente com o nome
+        String nomeCliente = (String) campoCliente.getSelectedItem();
+        if (nomeCliente == null) return;
+
+        for (Cliente cliente : clientela.getClientela().values()) {
+            if (cliente.getNome().equals(nomeCliente)) {
+                this.clienteSelecionado = cliente;
+                areaTexto.setText("Cliente selecionado:\n" + cliente.getNome());
+                return;
+            }
+        }
     }
 
     public void selecionarJogo(){
-        //percorre a treemap de jogos e acha o jogo pelo nome
+        String nomeJogo = (String) campoJogo.getSelectedItem();
+        if (nomeJogo == null) return;
+
+        for (Jogo jogo : catalogo.getCatalogo().values()) {
+            if (jogo.getNome().equals(nomeJogo)) {
+                this.jogoSelecionado = jogo;
+                areaTexto.setText("Jogo selecionado:\n" + jogo.getNome());
+                return;
+            }
+        }
     }
 
     public void cadastrarAluguel(){
@@ -202,7 +226,18 @@ public class FormularioAluguel extends JFrame {
     }
 
     public void mostrarDadosAluguel(){
-        //mostra os alugueis cadstrados q nem no  mostra clientes no form de clientes
+        TreeMap<Integer, Aluguel> mapaAlugueis = alugueis.getAlugueis();
+        if (mapaAlugueis.isEmpty()) {
+            areaTexto.setText("Não há aluguéis cadastrados.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("Lista de Aluguéis (ID Decrescente):\n\n");
+        // usei descendingMap pra iterar em ordem decrescente de chave
+        for (Aluguel aluguel : mapaAlugueis.descendingMap().values()) {
+            sb.append(aluguel.toString()).append("\n");
+        }
+        areaTexto.setText(sb.toString());
     }
 
     public void limparCampos(){
