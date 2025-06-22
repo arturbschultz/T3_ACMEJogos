@@ -21,7 +21,7 @@ public class FormularioCliente extends JFrame {
         super();
         clientela = new Clientela();
         setTitle("Cadastro de Clientes");
-        setSize(590,900);
+        setSize(595,900);
 
         // Painel principal da janela
         JPanel painelPrincipal = new JPanel();
@@ -45,7 +45,6 @@ public class FormularioCliente extends JFrame {
 
         // Painel intermediario para o campo de texto
         JPanel painelCampoTexto = new JPanel();
-        FlowLayout layoutCampoTexto = new FlowLayout(FlowLayout.LEFT);
         painelCampoTexto.setLayout(layoutRotulo);
         JLabel labelNome = new JLabel("Nome completo:");
         campoTextoNome = new JTextField(40);
