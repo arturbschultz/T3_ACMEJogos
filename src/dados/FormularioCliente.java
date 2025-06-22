@@ -11,7 +11,7 @@ public class FormularioCliente extends JFrame {
     private JTextArea areaTexto;
     private JComboBox<String> campoTipoCliente;
     private JPanel painelCampoTexto4, painelCampoTexto5;
-    private Clientela clientela;
+    private static Clientela clientela;
 
     public FormularioCliente(){
         /**
@@ -21,7 +21,7 @@ public class FormularioCliente extends JFrame {
         super();
         clientela = new Clientela();
         setTitle("Cadastro de Clientes");
-        setSize(595,900);
+        setSize(595,650);
 
         // Painel principal da janela
         JPanel painelPrincipal = new JPanel();
@@ -230,13 +230,10 @@ public class FormularioCliente extends JFrame {
     }
 
     private void mostrarDados(){
-        TreeMap<Integer, Cliente> clientes = clientela.getClientela();
-        StringBuilder dados = new StringBuilder("Clientes ja cadastrados:\n");
-
-        for(Map.Entry<Integer, Cliente> clientela: clientes.entrySet()){
-            Cliente cliente = clientela.getValue();
-            dados.append(clientela.getKey()).append(" - ").append(cliente.getNome()).append(" - ").append(cliente.getEndereco()).append("\n");
-        }
+        StringBuilder dados = clientela.mostrarDadosCliente();
         areaTexto.setText(dados.toString());
     }
+
+    //getClientela
+    public static Clientela getClientelaForm(){return clientela;}
 }

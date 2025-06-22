@@ -26,10 +26,14 @@ public class FormularioAluguel extends JFrame {
          */
         super();
         alugueis = new Alugueis();
-        clientela = new Clientela();
-        catalogo = new CatalogoJogos();
+        clientela = FormularioCliente.getClientelaForm();
+        catalogo = FormularioJogos.getCatalogoForm();
         setTitle("Cadastro de Alugueis");
-        setSize(590,900);
+        if(clientela.getClientela().isEmpty() || catalogo.getCatalogo().isEmpty()) {
+            setSize(400, 100);
+        }else{
+            setSize(595, 650);
+        }
 
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
@@ -40,17 +44,37 @@ public class FormularioAluguel extends JFrame {
         JLabel rotulo = new JLabel("Por favor, digite as informações:");
         painelRotulo.add(rotulo);
 
+        JPanel painelRotulo2 = new JPanel();
+        painelRotulo2.setLayout(layoutRotulo);
+        JLabel rotulo2 = new JLabel("Nenhum cliente ou jogo cadastrado");
+        painelRotulo2.add(rotulo2);
+
+        JPanel painelRotulo3 = new JPanel();
+        painelRotulo3.setLayout(layoutRotulo);
+        JLabel rotulo3 = new JLabel("Nenhum cliente cadastrado");
+        painelRotulo3.add(rotulo3);
+
+        JPanel painelRotulo4 = new JPanel();
+        painelRotulo4.setLayout(layoutRotulo);
+        JLabel rotulo4 = new JLabel("Nenhum jogo cadastrado");
+        painelRotulo4.add(rotulo4);
+
+        JPanel painelRotulo5 = new JPanel();
+        painelRotulo5.setLayout(layoutRotulo);
+        JLabel rotulo5 = new JLabel("Por favor, cadastre pelo menos um cliente e um jogo.");
+        painelRotulo5.add(rotulo5);
+
         //escolher o cliente
-        JPanel painelTipoCliente = new JPanel();
-        painelTipoCliente.setLayout(layoutRotulo);
+        JPanel painelCliente = new JPanel();
+        painelCliente.setLayout(layoutRotulo);
         JLabel labelCliente = new JLabel("Escolha o Cliente: ");
         campoCliente = new JComboBox<>();
-        for(Cliente c : clientela.getClientela().values()){
+        for (Cliente c : clientela.getClientela().values()) {
             campoCliente.addItem(c.getNome());
         }
         campoCliente.addActionListener(e -> selecionarCliente());
-        painelTipoCliente.add(labelCliente);
-        painelTipoCliente.add(campoCliente);
+        painelCliente.add(labelCliente);
+        painelCliente.add(campoCliente);
 
         //escolher o jogo
         JPanel painelJogo = new JPanel();
@@ -61,8 +85,8 @@ public class FormularioAluguel extends JFrame {
             campoJogo.addItem(j.getNome());
         }
         campoJogo.addActionListener(e -> selecionarJogo());
-        painelTipoCliente.add(labelJogo);
-        painelTipoCliente.add(campoJogo);
+        painelCliente.add(labelJogo);
+        painelCliente.add(campoJogo);
 
         //
         JPanel painelCampoTexto = new JPanel();
@@ -73,18 +97,18 @@ public class FormularioAluguel extends JFrame {
         painelCampoTexto.add(campoTextoId);
 
         JPanel painelCampoTexto2 = new JPanel();
-        painelCampoTexto.setLayout(layoutRotulo);
+        painelCampoTexto2.setLayout(layoutRotulo);
         JLabel labelData = new JLabel("Data Inicial:");
         campoTextoData = new JTextField(40);
-        painelCampoTexto.add(labelData);
-        painelCampoTexto.add(campoTextoData);
+        painelCampoTexto2.add(labelData);
+        painelCampoTexto2.add(campoTextoData);
 
         JPanel painelCampoTexto3 = new JPanel();
-        painelCampoTexto.setLayout(layoutRotulo);
-        JLabel labelPeriodo = new JLabel("Data Inicial:");
+        painelCampoTexto3.setLayout(layoutRotulo);
+        JLabel labelPeriodo = new JLabel("Periodo:");
         campoTextoPeriodo = new JTextField(40);
-        painelCampoTexto.add(labelPeriodo);
-        painelCampoTexto.add(campoTextoPeriodo);
+        painelCampoTexto3.add(labelPeriodo);
+        painelCampoTexto3.add(campoTextoPeriodo);
 
         // Painel intermediario para os botoes
         JPanel painelBotoes = new JPanel();
@@ -107,7 +131,7 @@ public class FormularioAluguel extends JFrame {
 
         botaoMostrarDados = new JButton("Mostrar Dados");
         botaoMostrarDados.addActionListener(e -> {
-            mostrarDadosAluguel();
+            mostrarClientes();
         });
 
 
@@ -126,33 +150,37 @@ public class FormularioAluguel extends JFrame {
         areaTexto = new JTextArea(5,47);
         JScrollPane painelAreaTexto = new JScrollPane(areaTexto);
 
-        painelPrincipal.add(painelRotulo);
-        painelPrincipal.add(painelTipoCliente);
-        painelPrincipal.add(painelCampoTexto);
-        painelPrincipal.add(painelCampoTexto2);
-        painelPrincipal.add(painelCampoTexto3);
 
-        painelPrincipal.add(painelBotoes);
-        painelPrincipal.add(painelRotuloMensagens);
-        painelPrincipal.add(painelAreaTexto);
+        if(clientela.getClientela().isEmpty() && catalogo.getCatalogo().isEmpty()) {
+            painelPrincipal.add(painelRotulo2);
+            painelPrincipal.add(painelRotulo5);
+        }else if(!clientela.getClientela().isEmpty() && catalogo.getCatalogo().isEmpty()) {
+            painelPrincipal.add(painelRotulo4);
+            painelPrincipal.add(painelRotulo5);
+        }else if(clientela.getClientela().isEmpty() && !catalogo.getCatalogo().isEmpty()) {
+            painelPrincipal.add(painelRotulo3);
+            painelPrincipal.add(painelRotulo5);
+        }else{
+            painelPrincipal.add(painelRotulo);
+            painelPrincipal.add(painelCliente);
+            painelPrincipal.add(painelJogo);
+            painelPrincipal.add(painelCampoTexto);
+            painelPrincipal.add(painelCampoTexto2);
+            painelPrincipal.add(painelCampoTexto3);
+            painelPrincipal.add(painelBotoes);
+            painelPrincipal.add(painelRotuloMensagens);
+            painelPrincipal.add(painelAreaTexto);
+        }
 
         this.add(painelPrincipal);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
 
-    /**
-     * private void mostrarDadosClientes(){
-     *         TreeMap<Integer, Cliente> clientes = clientela.getClientela();
-     *         StringBuilder dados = new StringBuilder("Clientes ja cadastrados:\n");
-     *
-     *         for(Map.Entry<Integer, Cliente> clientela: clientes.entrySet()){
-     *             Cliente cliente = clientela.getValue();
-     *             dados.append(clientela.getKey()).append(" - ").append(cliente.getNome()).append(" - ").append(cliente.getEndereco()).append("\n");
-     *         }
-     *         areaTexto.setText(dados.toString());
-     *     }
-     */
+
+    private void mostrarClientes(){
+        StringBuilder dados = clientela.mostrarDadosCliente();
+        areaTexto.setText(dados.toString());
+    }
 
 
     /**
@@ -191,10 +219,12 @@ public class FormularioAluguel extends JFrame {
 
     public void selecionarCliente(){
         //percorre a treemap de clientes e acha o cliente com o nome
+        String clienteSelect = (String) campoCliente.getSelectedItem();
     }
 
     public void selecionarJogo(){
         //percorre a treemap de jogos e acha o jogo pelo nome
+        String jogoSelect = (String) campoJogo.getSelectedItem();
     }
 
     public void cadastrarAluguel(){

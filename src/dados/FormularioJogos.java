@@ -14,7 +14,7 @@ public class FormularioJogos extends JFrame {
     private JPanel painelEletronico;
     private JPanel painelMesa;
     private CatalogoJogos jogos;
-    private CatalogoJogos catalogo;
+    private static CatalogoJogos catalogo;
 
     public FormularioJogos() {
         super();
@@ -166,6 +166,7 @@ public class FormularioJogos extends JFrame {
             areaTexto.append("Erro: já existe um jogo com este código.\n");
             campoTextoCodigo.setText("");
         }
+        new FormularioAluguel();
     }
 
     // Valida os campos basicos
@@ -311,4 +312,5 @@ public class FormularioJogos extends JFrame {
 
         areaTexto.setText(dados.toString());
     }
+    public static CatalogoJogos getCatalogoForm(){return catalogo;}
 }

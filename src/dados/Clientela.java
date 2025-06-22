@@ -1,5 +1,6 @@
 package dados;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Clientela {
@@ -16,5 +17,24 @@ public class Clientela {
         }
         clientela.put(cliente.getNumero(), cliente);
         return true;
+    }
+
+    public Cliente getClienteNome(String nome){
+        return null;
+    }
+
+    public StringBuilder mostrarDadosCliente(){
+        TreeMap<Integer, Cliente> clientes = clientela;
+        StringBuilder dados;
+        if (clientela.isEmpty()) {
+            dados = new StringBuilder("Não há clientes cadastrados.\n");
+            return dados;
+        }
+       dados = new StringBuilder("Clientes ja cadastrados:\n");
+        for(Map.Entry<Integer, Cliente> clientela: clientes.entrySet()){
+            Cliente cliente = clientela.getValue();
+            dados.append(clientela.getKey()).append(" - ").append(cliente.getNome()).append(" - ").append(cliente.getEndereco()).append("\n");
+        }
+        return dados;
     }
 }
