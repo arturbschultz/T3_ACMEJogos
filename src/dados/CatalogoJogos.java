@@ -106,11 +106,6 @@ public class CatalogoJogos {
         }
     }
 
-    /**
-     * Salva os jogos em um arquivo CSV.
-     * @param arquivoCSV nome do arquivo (com extensão)
-     * @throws Exception se houver erro de escrita
-     */
     public void salvarJogosEmCSV(String arquivoCSV) throws Exception {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoCSV)) {
             writer.println("codigo;nome;valorBase;tipoJogo;tipo;plataformaOuPecas");
@@ -130,11 +125,6 @@ public class CatalogoJogos {
         }
     }
 
-    /**
-     * Salva os jogos em um arquivo JSON.
-     * @param arquivoJSON nome do arquivo (com extensão)
-     * @throws Exception se houver erro de escrita
-     */
     public void salvarJogosEmJSON(String arquivoJSON) throws Exception {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoJSON)) {
             writer.println("{");

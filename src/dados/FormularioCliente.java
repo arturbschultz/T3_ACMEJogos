@@ -16,10 +16,6 @@ public class FormularioCliente extends JFrame {
     private static Clientela clientela = new Clientela();
 
     public FormularioCliente(){
-        /**
-         * d
-         */
-
         super();
         clientela = ACMEJogos.getClientela();
         setTitle("Cadastro de Clientes");

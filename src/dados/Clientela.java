@@ -109,11 +109,6 @@ public class Clientela {
         }
     }
 
-    /**
-     * Salva os clientes em um arquivo CSV.
-     * @param arquivoCSV nome do arquivo (com extensão)
-     * @throws Exception se houver erro de escrita
-     */
     public void salvarClientesEmCSV(String arquivoCSV) throws Exception {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoCSV)) {
             writer.println("numero;nome;endereco;tipoCliente;cpfOuNomeFantasia;cnpj");
@@ -131,11 +126,7 @@ public class Clientela {
         }
     }
 
-    /**
-     * Salva os clientes em um arquivo JSON.
-     * @param arquivoJSON nome do arquivo (com extensão)
-     * @throws Exception se houver erro de escrita
-     */
+
     public void salvarClientesEmJSON(String arquivoJSON) throws Exception {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoJSON)) {
             writer.println("{");
@@ -170,10 +161,6 @@ public class Clientela {
         }
     }
 
-    /**
-     * Carrega os clientes de um arquivo JSON.
-     * @param arquivoJSON nome do arquivo (com extensão)
-     */
     public void carregarClientesDoJSON(String arquivoJSON) {
         try (BufferedReader br = new BufferedReader(new FileReader(arquivoJSON))) {
             StringBuilder conteudo = new StringBuilder();
@@ -225,9 +212,6 @@ public class Clientela {
         }
     }
 
-    /**
-     * Escapa caracteres especiais para JSON.
-     */
     private String escapeJSON(String texto) {
         if (texto == null) return "";
         return texto.replace("\\", "\\\\")
@@ -237,9 +221,6 @@ public class Clientela {
                    .replace("\t", "\\t");
     }
 
-    /**
-     * Extrai um valor inteiro de uma string JSON.
-     */
     private int extrairInteiro(String json, String campo) {
         String padrao = "\"" + campo + "\":";
         int inicio = json.indexOf(padrao);
@@ -257,9 +238,6 @@ public class Clientela {
         }
     }
 
-    /**
-     * Extrai um valor string de uma string JSON.
-     */
     private String extrairString(String json, String campo) {
         String padrao = "\"" + campo + "\":\"";
         int inicio = json.indexOf(padrao);
