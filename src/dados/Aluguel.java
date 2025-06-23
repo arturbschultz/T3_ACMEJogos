@@ -2,7 +2,13 @@ package dados;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+/**
+ * Classe que representa um aluguel de jogo.
+ * Mantém as informações do aluguel e implementa o cálculo do valor final
+ * baseado no tipo de cliente e jogo.
+ */
 public class Aluguel {
+    // Dados do aluguel
     private int identificador;
     private Date dataInicial;
     private int periodo;
@@ -18,25 +24,32 @@ public class Aluguel {
         this.jogo = jogo;
     }
 
-    //getters
+    // Métodos de acesso
     public int getIdentificador() {return this.identificador;}
-
     public Date getDataInicial() {return this.dataInicial;}
-
     public int getPeriodo() {return this.periodo;}
-
     public Cliente getCliente() {return cliente;}
-
     public Jogo getJogo() {return jogo;}
 
-    //setters
+    // Métodos de modificação
     public void setIdentificador(int identificador) {this.identificador = identificador;}
-
     public void setDataInicial(Date dataInicial) {this.dataInicial = dataInicial;}
-
     public void setPeriodo(int periodo) {this.periodo = periodo;}
 
-    public double calculaValorFinal(){
+    /**
+     * Calcula o valor final do aluguel baseado no tipo de cliente e jogo.
+     * Para clientes individuais:
+     * - Período < 7 dias: 10% de desconto
+     * - Período entre 7 e 14 dias: 20% de desconto
+     * - Período > 14 dias: 25% de desconto
+     * 
+     * Para clientes empresariais:
+     * - Jogos eletrônicos: sem desconto
+     * - Jogos de mesa: 15% de desconto
+     * 
+     * @return valor final do aluguel considerando o período e descontos aplicáveis
+     */
+    public double calculaValorFinal() {
         double valorBaseAluguel = jogo.calculaAluguel();
         if (cliente instanceof Individual) {
             if (periodo < 7) {
@@ -48,12 +61,12 @@ public class Aluguel {
             }
         } else if (cliente instanceof Empresarial) {
             if(jogo instanceof JogoEletronico){
-                return valorBaseAluguel * periodo;
-            }else{
-                return (valorBaseAluguel * 0.85)*periodo;
+                return valorBaseAluguel * periodo; // Sem desconto para jogos eletrônicos
+            } else {
+                return (valorBaseAluguel * 0.85)*periodo; // 15% de desconto para jogos de mesa
             }
         }
-        return valorBaseAluguel;
+        return valorBaseAluguel * periodo; // Caso base (não deveria ocorrer)
     }
 
     @Override
