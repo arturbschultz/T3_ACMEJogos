@@ -1,4 +1,6 @@
 package app;
+import dados.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,16 +19,16 @@ public class ACMEJogos {
     private String arquivoEntradaCliente;  // Nome do arquivo de entrada de dados
     private String arquivoEntradaJogo;
     private String arquivoEntradaAluguel;
-    private String nomeArquivoSaida;  // Nome do arquivo de saida de dados
+    private String nomeArquivoSaida = "FINAL";  // Nome do arquivo de saida de dados
+    private static Clientela clientela;
+    private static CatalogoJogos catalogo;
+    private static Alugueis alugueis;
 
     public ACMEJogos() {
         redirecionaEntradaCliente();
         redirecionaEntradaJogo();
         redirecionaEntradaAluguel();
         redirecionaSaida();
-    }
-
-    public void inicializar(){
     }
 
     public void redirecionaEntradaCliente(){
@@ -62,5 +64,20 @@ public class ACMEJogos {
         inAluguel.useLocale(Locale.ENGLISH);
     }
 
-    public void redirecionaSaida(){}
+    public void redirecionaSaida(){
+        try{
+            PrintStream streamOut = new PrintStream(new File(nomeArquivoSaida), Charset.forName("UTF-8"));
+            System.setOut(streamOut);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        Locale.setDefault(Locale.ENGLISH);
+    }
+
+    public void inicializar(){
+        redirecionaEntradaCliente();
+        redirecionaEntradaJogo();
+        redirecionaEntradaAluguel();
+        redirecionaSaida();
+    }
 }
