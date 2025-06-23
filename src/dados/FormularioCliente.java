@@ -1,4 +1,6 @@
 package dados;
+import app.ACMEJogos;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class FormularioCliente extends JFrame {
          */
 
         super();
-        clientela = new Clientela();
+        clientela = ACMEJogos.getClientela();
         setTitle("Cadastro de Clientes");
         setSize(595,650);
 

@@ -32,7 +32,7 @@ public class ACMEJogos extends JFrame {
     private static CatalogoJogos catalogo;
     private static Alugueis alugueis;
 
-    private JButton bCadastrarCliente, bCadastrarJogo, bCadastrarAluguel, bRelatorioCliente, bRelatorioJogo, bRelatorioAluguel, bFinalizar, bRemoverDadosAluguel, bAlterarDadosCliente, bSalvarDados, bCarregarDados;
+    private JButton bCadastrarCliente, bCadastrarJogo, bCadastrarAluguel, bRelatorioCliente, bRelatorioJogo, bRelatorioAluguel, bFinalizar, bRemoverDadosAluguel, bAlterarDadosCliente, bSalvarDados, bCarregarDados, bSalvarDadosJSON, bCarregarDadosJSON;
     private JTextArea areaTexto;
 
     public ACMEJogos() {
@@ -110,6 +110,12 @@ public class ACMEJogos extends JFrame {
         bCarregarDados = new JButton("Carregar Dados");
         bCarregarDados.addActionListener(e -> carregarDados());
 
+        bSalvarDadosJSON = new JButton("Salvar Dados em JSON");
+        bSalvarDadosJSON.addActionListener(e -> salvarDadosJSON());
+
+        bCarregarDadosJSON = new JButton("Carregar Dados em JSON");
+        bCarregarDadosJSON.addActionListener(e -> carregarDadosJSON());
+
         bFinalizar = new JButton("Finalizar");
         bFinalizar.addActionListener(e -> System.exit(0));
 
@@ -123,6 +129,8 @@ public class ACMEJogos extends JFrame {
         painelBotoes.add(bAlterarDadosCliente);
         painelBotoes.add(bSalvarDados);
         painelBotoes.add(bCarregarDados);
+        painelBotoes.add(bSalvarDadosJSON);
+        painelBotoes.add(bCarregarDadosJSON);
         painelBotoes.add(bFinalizar);
 
         JPanel painelRotuloMensagens = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -275,6 +283,47 @@ public class ACMEJogos extends JFrame {
             areaTexto.setText("Dados carregados com sucesso dos arquivos: " + nomeBase + "_CLIENTES.csv, " + nomeBase + "_JOGOS.csv, " + nomeBase + "_ALUGUEIS.csv");
         } catch (Exception ex) {
             areaTexto.setText("Erro ao carregar dados: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Salva todos os dados do sistema em arquivos JSON.
+     */
+    private void salvarDadosJSON() {
+        String nomeBase = JOptionPane.showInputDialog(this, "Digite o nome base do arquivo para salvar (sem extensão):");
+        if (nomeBase == null || nomeBase.trim().isEmpty()) {
+            areaTexto.setText("Operação cancelada ou nome inválido.");
+            return;
+        }
+        try {
+            clientela.salvarClientesEmJSON(nomeBase + "_CLIENTES.json");
+            catalogo.salvarJogosEmJSON(nomeBase + "_JOGOS.json");
+            alugueis.salvarAlugueisEmJSON(nomeBase + "_ALUGUEIS.json");
+            areaTexto.setText("Dados salvos com sucesso em arquivos JSON: " + nomeBase + "_CLIENTES.json, " + nomeBase + "_JOGOS.json, " + nomeBase + "_ALUGUEIS.json");
+        } catch (Exception ex) {
+            areaTexto.setText("Erro ao salvar dados em JSON: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Carrega todos os dados do sistema a partir de arquivos JSON.
+     */
+    private void carregarDadosJSON() {
+        String nomeBase = JOptionPane.showInputDialog(this, "Digite o nome base do arquivo para carregar (sem extensão):");
+        if (nomeBase == null || nomeBase.trim().isEmpty()) {
+            areaTexto.setText("Operação cancelada ou nome inválido.");
+            return;
+        }
+        try {
+            clientela.getClientela().clear();
+            catalogo.getCatalogo().clear();
+            alugueis.getAlugueis().clear();
+            clientela.carregarClientesDoJSON(nomeBase + "_CLIENTES.json");
+            catalogo.carregarJogosDoJSON(nomeBase + "_JOGOS.json");
+            alugueis.carregarAlugueisDoJSON(nomeBase + "_ALUGUEIS.json");
+            areaTexto.setText("Dados carregados com sucesso dos arquivos JSON: " + nomeBase + "_CLIENTES.json, " + nomeBase + "_JOGOS.json, " + nomeBase + "_ALUGUEIS.json");
+        } catch (Exception ex) {
+            areaTexto.setText("Erro ao carregar dados JSON: " + ex.getMessage());
         }
     }
 

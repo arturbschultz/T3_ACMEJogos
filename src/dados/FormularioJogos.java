@@ -1,4 +1,6 @@
 package dados;
+import app.ACMEJogos;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.TreeMap;
@@ -20,7 +22,7 @@ public class FormularioJogos extends JFrame {
         super();
         setTitle("Cadastro de Jogos");
         setSize(590, 700);
-        catalogo = new CatalogoJogos();
+        catalogo = ACMEJogos.getCatalogoApp();
 
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));

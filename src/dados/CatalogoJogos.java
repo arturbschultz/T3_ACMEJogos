@@ -129,4 +129,173 @@ public class CatalogoJogos {
             }
         }
     }
+
+    /**
+     * Salva os jogos em um arquivo JSON.
+     * @param arquivoJSON nome do arquivo (com extensão)
+     * @throws Exception se houver erro de escrita
+     */
+    public void salvarJogosEmJSON(String arquivoJSON) throws Exception {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoJSON)) {
+            writer.println("{");
+            writer.println("  \"jogos\": [");
+            
+            boolean primeiro = true;
+            for (Jogo jogo : catalogo.values()) {
+                if (!primeiro) {
+                    writer.println(",");
+                }
+                primeiro = false;
+                
+                writer.print("    {");
+                writer.printf("\"codigo\": %d, ", jogo.getCodigo());
+                writer.printf("\"nome\": \"%s\", ", escapeJSON(jogo.getNome()));
+                writer.printf("\"valorBase\": %.2f", jogo.getValorBase());
+                
+                if (jogo instanceof JogoEletronico) {
+                    JogoEletronico eletronico = (JogoEletronico) jogo;
+                    writer.printf(", \"tipo\": \"eletronico\", \"tipoEletronico\": \"%s\", \"plataforma\": \"%s\"", 
+                        eletronico.getTipo().name(), escapeJSON(eletronico.getPlataforma()));
+                } else if (jogo instanceof JogoMesa) {
+                    JogoMesa mesa = (JogoMesa) jogo;
+                    writer.printf(", \"tipo\": \"mesa\", \"tipoMesa\": \"%s\", \"numeroPecas\": %d", 
+                        mesa.getTipo().name(), mesa.getNumeroPecas());
+                }
+                writer.print("}");
+            }
+            
+            writer.println();
+            writer.println("  ]");
+            writer.println("}");
+        }
+    }
+
+    /**
+     * Carrega os jogos de um arquivo JSON.
+     * @param arquivoJSON nome do arquivo (com extensão)
+     */
+    public void carregarJogosDoJSON(String arquivoJSON) {
+        try (BufferedReader br = new BufferedReader(new FileReader(arquivoJSON))) {
+            StringBuilder conteudo = new StringBuilder();
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                conteudo.append(linha).append("\n");
+            }
+            
+            String json = conteudo.toString();
+            // Remove espaços em branco e quebras de linha
+            json = json.replaceAll("\\s+", "");
+            
+            // Extrai o array de jogos
+            int inicio = json.indexOf("\"jogos\":[") + 9;
+            int fim = json.lastIndexOf("]");
+            if (inicio > 8 && fim > inicio) {
+                String jogosJson = json.substring(inicio, fim);
+                
+                // Processa cada jogo
+                String[] jogos = jogosJson.split("\\},\\{");
+                for (String jogoJson : jogos) {
+                    // Remove chaves extras
+                    jogoJson = jogoJson.replaceAll("^\\{|\\}$", "");
+                    
+                    // Extrai os campos
+                    int codigo = extrairInteiro(jogoJson, "codigo");
+                    String nome = extrairString(jogoJson, "nome");
+                    double valorBase = extrairDouble(jogoJson, "valorBase");
+                    String tipo = extrairString(jogoJson, "tipo");
+                    
+                    Jogo jogo;
+                    if ("eletronico".equals(tipo)) {
+                        String tipoEletronico = extrairString(jogoJson, "tipoEletronico");
+                        String plataforma = extrairString(jogoJson, "plataforma");
+                        jogo = new JogoEletronico(codigo, nome, valorBase, TipoEletronico.valueOf(tipoEletronico), plataforma);
+                    } else if ("mesa".equals(tipo)) {
+                        String tipoMesa = extrairString(jogoJson, "tipoMesa");
+                        int numeroPecas = extrairInteiro(jogoJson, "numeroPecas");
+                        jogo = new JogoMesa(codigo, nome, valorBase, TipoMesa.valueOf(tipoMesa), numeroPecas);
+                    } else {
+                        continue; // Tipo desconhecido, pula
+                    }
+                    
+                    addJogo(jogo);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler arquivo JSON de jogos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Escapa caracteres especiais para JSON.
+     */
+    private String escapeJSON(String texto) {
+        if (texto == null) return "";
+        return texto.replace("\\", "\\\\")
+                   .replace("\"", "\\\"")
+                   .replace("\n", "\\n")
+                   .replace("\r", "\\r")
+                   .replace("\t", "\\t");
+    }
+
+    /**
+     * Extrai um valor inteiro de uma string JSON.
+     */
+    private int extrairInteiro(String json, String campo) {
+        String padrao = "\"" + campo + "\":";
+        int inicio = json.indexOf(padrao);
+        if (inicio == -1) return 0;
+        
+        inicio += padrao.length();
+        int fim = json.indexOf(",", inicio);
+        if (fim == -1) fim = json.indexOf("}", inicio);
+        if (fim == -1) return 0;
+        
+        try {
+            return Integer.parseInt(json.substring(inicio, fim).trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Extrai um valor double de uma string JSON.
+     */
+    private double extrairDouble(String json, String campo) {
+        String padrao = "\"" + campo + "\":";
+        int inicio = json.indexOf(padrao);
+        if (inicio == -1) return 0.0;
+        
+        inicio += padrao.length();
+        int fim = json.indexOf(",", inicio);
+        if (fim == -1) fim = json.indexOf("}", inicio);
+        if (fim == -1) return 0.0;
+        
+        try {
+            return Double.parseDouble(json.substring(inicio, fim).trim());
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    /**
+     * Extrai um valor string de uma string JSON.
+     */
+    private String extrairString(String json, String campo) {
+        String padrao = "\"" + campo + "\":\"";
+        int inicio = json.indexOf(padrao);
+        if (inicio == -1) return "";
+        
+        inicio += padrao.length();
+        int fim = json.indexOf("\"", inicio);
+        if (fim == -1) return "";
+        
+        String valor = json.substring(inicio, fim);
+        // Desescapa caracteres especiais
+        return valor.replace("\\\"", "\"")
+                   .replace("\\\\", "\\")
+                   .replace("\\n", "\n")
+                   .replace("\\r", "\r")
+                   .replace("\\t", "\t");
+    }
 }
