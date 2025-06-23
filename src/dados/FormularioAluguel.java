@@ -1,4 +1,6 @@
 package dados;
+import app.ACMEJogos;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.ParseException;
@@ -23,17 +25,19 @@ public class FormularioAluguel extends JFrame {
 
     public FormularioAluguel() {
         super();
-        alugueis = new Alugueis();
-        clientela = FormularioCliente.getClientelaForm();
-        catalogo = FormularioJogos.getCatalogoForm();
+        alugueis = ACMEJogos.getAlugueisApp();
+        clientela = ACMEJogos.getClientelaApp();
+        catalogo = ACMEJogos.getCatalogoApp();
 
         // Configuração da janela
         setTitle("Cadastro de Alugueis");
-        if(clientela.getClientela().isEmpty() || catalogo.getCatalogo().isEmpty()) {
-            setSize(400, 100);
-        } else {
-            setSize(595, 650);
-        }
+
+            if (clientela.getClientela().isEmpty() || catalogo.getCatalogo().isEmpty()) {
+                setSize(400, 100);
+            } else {
+                setSize(595, 650);
+            }
+
 
         // Configuração do layout principal
         JPanel painelPrincipal = new JPanel();
@@ -63,9 +67,11 @@ public class FormularioAluguel extends JFrame {
         JPanel painelCliente = new JPanel(layoutRotulo);
         JLabel labelCliente = new JLabel("Escolha o Cliente: ");
         campoCliente = new JComboBox<>();
+
         for (Cliente c : clientela.getClientela().values()) {
             campoCliente.addItem(c.getNome());
         }
+
         campoCliente.addActionListener(e -> selecionarCliente());
         painelCliente.add(labelCliente);
         painelCliente.add(campoCliente);
@@ -129,6 +135,7 @@ public class FormularioAluguel extends JFrame {
 
         areaTexto = new JTextArea(5,47);
         JScrollPane painelAreaTexto = new JScrollPane(areaTexto);
+
 
         // Montagem do layout baseada no estado do sistema
         if(clientela.getClientela().isEmpty() && catalogo.getCatalogo().isEmpty()) {
@@ -267,17 +274,8 @@ public class FormularioAluguel extends JFrame {
 
 
     public void mostrarDadosAluguel() {
-        TreeMap<Integer, Aluguel> mapaAlugueis = alugueis.getAlugueis();
-        if (mapaAlugueis.isEmpty()) {
-            areaTexto.setText("Não há aluguéis cadastrados.");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder("Lista de Aluguéis (ID Decrescente):\n\n");
-        for (Aluguel aluguel : mapaAlugueis.descendingMap().values()) {
-            sb.append(aluguel.toString()).append("\n");
-        }
-        areaTexto.setText(sb.toString());
+        StringBuilder dados = alugueis.mostrarDadosAluguel();
+        areaTexto.setText(dados.toString());
     }
 
     /**

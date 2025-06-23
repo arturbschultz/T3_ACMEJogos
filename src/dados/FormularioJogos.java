@@ -14,7 +14,7 @@ public class FormularioJogos extends JFrame {
     private JPanel painelEletronico;
     private JPanel painelMesa;
     private CatalogoJogos jogos;
-    private static CatalogoJogos catalogo;
+    private static CatalogoJogos catalogo = new CatalogoJogos();
 
     public FormularioJogos() {
         super();
@@ -282,34 +282,7 @@ public class FormularioJogos extends JFrame {
     }
 
     private void mostrarDadosJogos() {
-        TreeMap<Integer, Jogo> jogos = catalogo.getCatalogo();
-        if (jogos.isEmpty()) {
-            areaTexto.setText("Não há jogos cadastrados.\n");
-            return;
-        }
-
-        StringBuilder dados = new StringBuilder("Jogos Cadastrados:\n\n");
-        for (Jogo jogo : jogos.values()) {
-            dados.append("Código: ").append(jogo.getCodigo())
-                    .append("\nNome: ").append(jogo.getNome())
-                    .append("\nValor Base: R$").append(String.format("%.2f", jogo.getValorBase()));
-
-            if (jogo instanceof JogoEletronico) {
-                JogoEletronico jogoEletronico = (JogoEletronico) jogo;
-                dados.append("\nTipo: Eletrônico")
-                        .append("\nTipo Eletrônico: ").append(jogoEletronico.getTipo())
-                        .append("\nPlataforma: ").append(jogoEletronico.getPlataforma());
-            } else if (jogo instanceof JogoMesa) {
-                JogoMesa jogoMesa = (JogoMesa) jogo;
-                dados.append("\nTipo: Mesa")
-                        .append("\nTipo Mesa: ").append(jogoMesa.getTipo())
-                        .append("\nNúmero de Peças: ").append(jogoMesa.getNumeroPecas());
-            }
-
-            dados.append("\nValor do Aluguel: R$").append(String.format("%.2f", jogo.calculaAluguel()))
-                    .append("\n\n");
-        }
-
+        StringBuilder dados = catalogo.mostrarDadosJogos();
         areaTexto.setText(dados.toString());
     }
     public static CatalogoJogos getCatalogoForm(){return catalogo;}

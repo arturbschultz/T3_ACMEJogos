@@ -35,15 +35,16 @@ public class ACMEJogos {
         clientela = new Clientela();
         catalogo = new CatalogoJogos();
         alugueis = new Alugueis();
-        initialize();
+        inicializar();
     }
 
-    public void initialize() {
+    public void inicializar() {
         // Carregar dados dos arquivos CSV
 
         
         // Carregar clientes
         clientela.carregarClientesDoCSV(arquivoEntradaCliente);
+
         
         // Carregar jogos
         System.out.println("Carregando jogos...");
@@ -56,7 +57,7 @@ public class ACMEJogos {
         System.out.println("Sistema inicializado com sucesso!");
     }
 
-    public void inicializar() {
+    public void executar() {
         int opcao = -1;
         while(opcao != 0) {
             try {
@@ -104,10 +105,10 @@ public class ACMEJogos {
                     System.out.println(clientela.mostrarDadosCliente());
                     break;
                 case 2:
-                    mostrarDadosJogos();
+                    System.out.println(catalogo.mostrarDadosJogos());
                     break;
                 case 3:
-                    mostrarDadosAlugueis();
+                    System.out.println(alugueis.mostrarDadosAluguel());
                     break;
                 case 0:
                     return;
@@ -116,34 +117,6 @@ public class ACMEJogos {
             }
         } catch (Exception e) {
             System.out.println("Opção inválida!");
-        }
-    }
-
-    private void mostrarDadosJogos() {
-        if (catalogo.getCatalogo().isEmpty()) {
-            System.out.println("Não há jogos cadastrados.");
-            return;
-        }
-
-        System.out.println("\nJogos Cadastrados:");
-        for (Jogo jogo : catalogo.getCatalogo().values()) {
-            System.out.println("\nCódigo: " + jogo.getCodigo());
-            System.out.println("Nome: " + jogo.getNome());
-            System.out.println("Valor Base: R$" + String.format("%.2f", jogo.getValorBase()));
-            
-            if (jogo instanceof JogoEletronico) {
-                JogoEletronico jogoEletronico = (JogoEletronico) jogo;
-                System.out.println("Tipo: Eletrônico");
-                System.out.println("Tipo Eletrônico: " + jogoEletronico.getTipo());
-                System.out.println("Plataforma: " + jogoEletronico.getPlataforma());
-            } else if (jogo instanceof JogoMesa) {
-                JogoMesa jogoMesa = (JogoMesa) jogo;
-                System.out.println("Tipo: Mesa");
-                System.out.println("Tipo Mesa: " + jogoMesa.getTipo());
-                System.out.println("Número de Peças: " + jogoMesa.getNumeroPecas());
-            }
-            
-            System.out.println("Valor do Aluguel: R$" + String.format("%.2f", jogo.calculaAluguel()));
         }
     }
 
@@ -219,9 +192,7 @@ public class ACMEJogos {
             }
         }
     }
-
-    public static void main(String[] args) {
-        ACMEJogos app = new ACMEJogos();
-        app.inicializar();
-    }
+    public static Clientela getClientelaApp(){return clientela;}
+    public static CatalogoJogos getCatalogoApp(){return catalogo;}
+    public static Alugueis getAlugueisApp(){return alugueis;}
 }

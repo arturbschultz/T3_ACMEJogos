@@ -11,7 +11,7 @@ public class FormularioCliente extends JFrame {
     private JTextArea areaTexto;
     private JComboBox<String> campoTipoCliente;
     private JPanel painelCampoTexto4, painelCampoTexto5;
-    private static Clientela clientela;
+    private static Clientela clientela = new Clientela();
 
     public FormularioCliente(){
         /**

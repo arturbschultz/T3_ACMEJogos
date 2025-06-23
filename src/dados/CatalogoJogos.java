@@ -33,6 +33,35 @@ public class CatalogoJogos {
         return null;
     }
 
+    public StringBuilder mostrarDadosJogos() {
+        StringBuilder dados;
+        if (catalogo.isEmpty()) {
+            dados = new StringBuilder("\nNão há jogos cadastrados.");
+            return dados;
+        }
+
+        dados = new StringBuilder("\nJogos Cadastrados:");
+        for (Jogo jogo : catalogo.values()) {
+            dados.append("\nCódigo: " + jogo.getCodigo() + "\nNome: " + jogo.getNome());
+            dados.append("\nValor Base: R$" + String.format("%.2f", jogo.getValorBase()));
+
+            if (jogo instanceof JogoEletronico) {
+                JogoEletronico jogoEletronico = (JogoEletronico) jogo;
+                dados.append("\nTipo: Eletrônico");
+                dados.append("\nTipo Eletrônico: " + jogoEletronico.getTipo());
+                dados.append("\nPlataforma: " + jogoEletronico.getPlataforma());
+            } else if (jogo instanceof JogoMesa) {
+                JogoMesa jogoMesa = (JogoMesa) jogo;
+                dados.append("\nTipo: Mesa");
+                dados.append("\nTipo Mesa: " + jogoMesa.getTipo());
+                dados.append("\nNúmero de Peças: " + jogoMesa.getNumeroPecas());
+            }
+
+            dados.append("\nValor do Aluguel: R$" + String.format("%.2f", jogo.calculaAluguel()));
+        }
+        return dados;
+    }
+
     public TreeMap<Integer, Jogo> getCatalogo() {
         return catalogo;
     }

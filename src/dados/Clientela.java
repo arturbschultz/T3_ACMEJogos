@@ -54,6 +54,8 @@ public class Clientela {
         try (BufferedReader br = new BufferedReader(new FileReader(arquivoCSV))) {
             String linha;
             boolean primeiraLinha = true;
+            int numero, tipoCliente;
+            String nome, endereco, cpfOuNomeFantasia, cnpj;
             
             while ((linha = br.readLine()) != null) {
                 if (primeiraLinha) {
@@ -62,37 +64,43 @@ public class Clientela {
                 }
                 
                 String[] dados = linha.split(";");
-                if (dados.length >= 6) {
-                    try {
-                        int numero = Integer.parseInt(dados[0].trim());
-                        String nome = dados[1].trim();
-                        String endereco = dados[2].trim();
-                        int tipoCliente = Integer.parseInt(dados[3].trim());
-                        String cpfOuNomeFantasia = dados[4].trim();
-                        String cnpj = dados.length > 5 ? dados[5].trim() : "";
-
-                        Cliente cliente;
-                        if (tipoCliente == 1) { // Cliente Individual
-                            cliente = new Individual(
-                                numero,
-                                nome,
-                                endereco,
-                                cpfOuNomeFantasia
-                            );
-                        } else { // Cliente Empresarial
-                            cliente = new Empresarial(
-                                numero,
-                                nome,
-                                endereco,
-                                cpfOuNomeFantasia,
-                                cnpj
-                            );
-                        }
-                        addCliente(cliente);
-                    } catch (Exception e) {
-                        System.out.println("Erro ao processar cliente: " + linha);
-                        e.printStackTrace(System.out);
+                try {
+                    if(dados.length == 6) {
+                        numero = Integer.parseInt(dados[0].trim());
+                        nome = dados[1].trim();
+                        endereco = dados[2].trim();
+                        tipoCliente = Integer.parseInt(dados[3].trim());
+                        cpfOuNomeFantasia = dados[4].trim();
+                        cnpj = dados[5].trim();
+                    }else{
+                        numero = Integer.parseInt(dados[0].trim());
+                        nome = dados[1].trim();
+                        endereco = dados[2].trim();
+                        tipoCliente = Integer.parseInt(dados[3].trim());
+                        cpfOuNomeFantasia = dados[4].trim();
+                        cnpj = "";
                     }
+                    Cliente cliente;
+                    if (tipoCliente == 1) { // Cliente Individual
+                        cliente = new Individual(
+                            numero,
+                            nome,
+                            endereco,
+                            cpfOuNomeFantasia
+                        );
+                    } else { // Cliente Empresarial
+                        cliente = new Empresarial(
+                            numero,
+                            nome,
+                            endereco,
+                            cpfOuNomeFantasia,
+                            cnpj
+                        );
+                    }
+                    addCliente(cliente);
+                } catch (Exception e) {
+                    System.out.println("Erro ao processar cliente: " + linha);
+                    e.printStackTrace(System.out);
                 }
             }
         } catch (IOException e) {

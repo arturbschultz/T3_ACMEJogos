@@ -3,8 +3,7 @@ import dados.FormularioAluguel;
 
 public class Main {
     public static void main(String[] args) {
-        new FormularioAluguel();
         ACMEJogos sistema = new ACMEJogos();
-        sistema.inicializar();
+        sistema.executar();
     }
 }

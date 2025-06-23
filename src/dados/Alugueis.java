@@ -1,5 +1,7 @@
 package dados;
 
+import app.ACMEJogos;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,6 +16,8 @@ public class Alugueis {
 
     public Alugueis() {
         alugueis = new TreeMap<>();
+        clientela = ACMEJogos.getClientelaApp();
+        catalogo = ACMEJogos.getCatalogoApp();
     }
 
     public boolean addAluguel(Aluguel aluguel) {
@@ -26,6 +30,21 @@ public class Alugueis {
 
     public TreeMap<Integer, Aluguel> getAlugueis() {
         return alugueis;
+    }
+
+    public StringBuilder mostrarDadosAluguel() {
+        TreeMap<Integer, Aluguel> mapaAlugueis = alugueis;
+        StringBuilder dados;
+        if (mapaAlugueis.isEmpty()) {
+            dados = new StringBuilder("Não há aluguéis cadastrados.");
+            return dados;
+        }
+
+        dados = new StringBuilder("Lista de Aluguéis (ID Decrescente):\n\n");
+        for (Aluguel aluguel : mapaAlugueis.descendingMap().values()) {
+            dados.append(aluguel.toString()).append("\n");
+        }
+        return dados;
     }
 
     public void carregarAlugueisDoCSV(String arquivoCSV) {
