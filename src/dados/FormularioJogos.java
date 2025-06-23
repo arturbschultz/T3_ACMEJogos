@@ -136,7 +136,7 @@ public class FormularioJogos extends JFrame {
         painelPrincipal.add(painelAreaTexto);
 
         this.add(painelPrincipal);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
         atualizarCamposEspecificos();
     }

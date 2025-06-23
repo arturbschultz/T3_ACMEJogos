@@ -102,4 +102,25 @@ public class Alugueis {
         }
         return false;
     }
+
+    /**
+     * Salva os aluguéis em um arquivo CSV.
+     * @param arquivoCSV nome do arquivo (com extensão)
+     * @throws Exception se houver erro de escrita
+     */
+    public void salvarAlugueisEmCSV(String arquivoCSV) throws Exception {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoCSV)) {
+            writer.println("identificador;dataInicial;periodo;numeroCliente;codigoJogo");
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            for (Aluguel aluguel : alugueis.values()) {
+                writer.printf("%d;%s;%d;%d;%d\n",
+                    aluguel.getIdentificador(),
+                    sdf.format(aluguel.getDataInicial()),
+                    aluguel.getPeriodo(),
+                    aluguel.getCliente().getNumero(),
+                    aluguel.getJogo().getCodigo()
+                );
+            }
+        }
+    }
 }
