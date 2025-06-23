@@ -105,4 +105,28 @@ public class CatalogoJogos {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Salva os jogos em um arquivo CSV.
+     * @param arquivoCSV nome do arquivo (com extensão)
+     * @throws Exception se houver erro de escrita
+     */
+    public void salvarJogosEmCSV(String arquivoCSV) throws Exception {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoCSV)) {
+            writer.println("codigo;nome;valorBase;tipoJogo;tipo;plataformaOuPecas");
+            for (Jogo jogo : catalogo.values()) {
+                if (jogo instanceof JogoEletronico) {
+                    JogoEletronico eletronico = (JogoEletronico) jogo;
+                    writer.printf("%d;%s;%.2f;1;%s;%s\n",
+                        eletronico.getCodigo(), eletronico.getNome(), eletronico.getValorBase(),
+                        eletronico.getTipo().name(), eletronico.getPlataforma());
+                } else if (jogo instanceof JogoMesa) {
+                    JogoMesa mesa = (JogoMesa) jogo;
+                    writer.printf("%d;%s;%.2f;2;%s;%d\n",
+                        mesa.getCodigo(), mesa.getNome(), mesa.getValorBase(),
+                        mesa.getTipo().name(), mesa.getNumeroPecas());
+                }
+            }
+        }
+    }
 }

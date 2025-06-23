@@ -108,4 +108,26 @@ public class Clientela {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Salva os clientes em um arquivo CSV.
+     * @param arquivoCSV nome do arquivo (com extensão)
+     * @throws Exception se houver erro de escrita
+     */
+    public void salvarClientesEmCSV(String arquivoCSV) throws Exception {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(arquivoCSV)) {
+            writer.println("numero;nome;endereco;tipoCliente;cpfOuNomeFantasia;cnpj");
+            for (Cliente cliente : clientela.values()) {
+                if (cliente instanceof Individual) {
+                    Individual ind = (Individual) cliente;
+                    writer.printf("%d;%s;%s;1;%s;%s\n",
+                        ind.getNumero(), ind.getNome(), ind.getEndereco(), ind.getCpf(), "");
+                } else if (cliente instanceof Empresarial) {
+                    Empresarial emp = (Empresarial) cliente;
+                    writer.printf("%d;%s;%s;2;%s;%s\n",
+                        emp.getNumero(), emp.getNome(), emp.getEndereco(), emp.getNomeFantasia(), emp.getCnpj());
+                }
+            }
+        }
+    }
 }
