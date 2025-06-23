@@ -163,27 +163,18 @@ public class FormularioAluguel extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Seleciona o cliente escolhido no ComboBox e exibe suas informações
-     */
     public void selecionarCliente() {
         String nomeCliente = (String) campoCliente.getSelectedItem();
         clienteSelecionado = clientela.getClienteNome(nomeCliente);
         areaTexto.setText("Cliente selecionado:\n" + clienteSelecionado.getNome() + " - " + clienteSelecionado.getNumero());
     }
 
-    /**
-     * Seleciona o jogo escolhido no ComboBox e exibe suas informações
-     */
     public void selecionarJogo() {
         String nomeJogo = (String) campoJogo.getSelectedItem();
         jogoSelecionado = catalogo.getJogoNome(nomeJogo);
         areaTexto.setText("Jogo selecionado:\n" + jogoSelecionado.getNome());
     }
 
-    /**
-     * Realiza o cadastro de um novo aluguel com validações
-     */
     public void cadastrarAluguel() {
         String nomeCliente = (String) campoCliente.getSelectedItem();
         String nomeJogo = (String) campoJogo.getSelectedItem();
@@ -278,9 +269,6 @@ public class FormularioAluguel extends JFrame {
         areaTexto.setText(dados.toString());
     }
 
-    /**
-     * Limpa todos os campos do formulário
-     */
     public void limparCampos() {
         campoTextoId.setText("");
         campoTextoData.setText("");
