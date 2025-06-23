@@ -94,4 +94,12 @@ public class Alugueis {
             e.printStackTrace();
         }
     }
+
+    public boolean removerAluguel(int identificador) {
+        if (alugueis.containsKey(identificador)) {
+            alugueis.remove(identificador);
+            return true;
+        }
+        return false;
+    }
 }
