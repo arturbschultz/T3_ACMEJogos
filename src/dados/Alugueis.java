@@ -12,10 +12,8 @@ public class Alugueis {
     private Clientela clientela;
     private CatalogoJogos catalogo;
 
-    public Alugueis(Clientela clientela, CatalogoJogos catalogo) {
+    public Alugueis() {
         alugueis = new TreeMap<>();
-        this.clientela = clientela;
-        this.catalogo = catalogo;
     }
 
     public boolean addAluguel(Aluguel aluguel) {

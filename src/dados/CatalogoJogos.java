@@ -60,21 +60,9 @@ public class CatalogoJogos {
 
                         Jogo jogo;
                         if (tipoJogo == 1) { // Jogo Eletrônico
-                            jogo = new JogoEletronico(
-                                codigo,
-                                nome,
-                                valorBase,
-                                TipoEletronico.valueOf(tipo),
-                                plataformaOuPecas
-                            );
-                        } else { // Jogo de Mesa
-                            jogo = new JogoMesa(
-                                codigo,
-                                nome,
-                                valorBase,
-                                TipoMesa.valueOf(tipo),
-                                Integer.parseInt(plataformaOuPecas)
-                            );
+                            jogo = new JogoEletronico(codigo, nome, valorBase, TipoEletronico.valueOf(tipo), plataformaOuPecas);
+                        }else{ // Jogo de Mesa
+                            jogo = new JogoMesa(codigo, nome, valorBase, TipoMesa.valueOf(tipo), Integer.parseInt(plataformaOuPecas));
                         }
                         addJogo(jogo);
                     } catch (Exception e) {

@@ -23,16 +23,14 @@ public class FormularioAluguel extends JFrame {
 
     public FormularioAluguel() {
         super();
-        
-        // Inicialização das coleções de dados
+        alugueis = new Alugueis();
         clientela = FormularioCliente.getClientelaForm();
         catalogo = FormularioJogos.getCatalogoForm();
-        alugueis = new Alugueis(clientela, catalogo);
-        
+
         // Configuração da janela
         setTitle("Cadastro de Alugueis");
         if(clientela.getClientela().isEmpty() || catalogo.getCatalogo().isEmpty()) {
-            setSize(400, 100); // Tamanho reduzido quando não há dados
+            setSize(400, 100);
         } else {
             setSize(595, 650);
         }
@@ -254,7 +252,7 @@ public class FormularioAluguel extends JFrame {
                 limparCampos();
                 areaTexto.setText("Aluguel cadastrado com sucesso.\n" + aluguel.toString());
             } else {
-                areaTexto.setText("Este identificador já foi utilizado.\n");
+                areaTexto.setText("Este identificador já foi selecionado.\n");
                 campoTextoId.setText("");
             }
 

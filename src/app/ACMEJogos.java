@@ -29,21 +29,20 @@ public class ACMEJogos {
 
     public ACMEJogos() {
         s = new Scanner(System.in);
-        arquivoEntradaCliente = "T3_ACMEJogos/CLIENTESENTRADA.csv";
-        arquivoEntradaJogo = "T3_ACMEJogos/JOGOSENTRADA.csv";
-        arquivoEntradaAluguel = "T3_ACMEJogos/ALUGUEISENTRADA.csv";
+        arquivoEntradaCliente = "CLIENTESENTRADA.csv";
+        arquivoEntradaJogo = "JOGOSENTRADA.csv";
+        arquivoEntradaAluguel = "ALUGUEISENTRADA.csv";
         clientela = new Clientela();
         catalogo = new CatalogoJogos();
-        alugueis = new Alugueis(clientela, catalogo);
+        alugueis = new Alugueis();
         initialize();
     }
 
     public void initialize() {
         // Carregar dados dos arquivos CSV
-        System.out.println("Inicializando sistema...");
+
         
         // Carregar clientes
-        System.out.println("Carregando clientes...");
         clientela.carregarClientesDoCSV(arquivoEntradaCliente);
         
         // Carregar jogos
@@ -60,15 +59,6 @@ public class ACMEJogos {
     public void inicializar() {
         int opcao = -1;
         while(opcao != 0) {
-            // Menu principal do sistema
-            System.out.println("\n==== ACME Jogos ====");
-            System.out.println("1 - Cadastro de Clientes");
-            System.out.println("2 - Cadastro de Jogos");
-            System.out.println("3 - Cadastro de Aluguéis");
-            System.out.println("4 - Relatórios");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
-            
             try {
                 opcao = Integer.parseInt(s.nextLine());
             } catch (Exception e) {
@@ -90,10 +80,7 @@ public class ACMEJogos {
                     mostrarRelatorios();
                     break;
                 case 0:
-                    System.out.println("Saindo...");
                     break;
-                default:
-                    System.out.println("Opção inválida!");
             }
         }
         // Libera recursos ao encerrar
