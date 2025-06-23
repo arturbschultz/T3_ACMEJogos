@@ -20,6 +20,12 @@ public class Clientela {
     }
 
     public Cliente getClienteNome(String nome){
+        String nomeCliente = nome;
+        for (Cliente cliente : clientela.values()) {
+            if (cliente.getNome().equals(nomeCliente)) {
+                return cliente;
+            }
+        }
         return null;
     }
 

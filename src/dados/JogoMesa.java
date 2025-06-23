@@ -20,6 +20,25 @@ public class JogoMesa extends Jogo {
 
     @Override
     public double calculaAluguel() {
-        return 0;
+        double valorAluguel = getValorBase();
+
+        // Aplica multiplicador baseado no tipo de jogo de mesa
+        switch (tipo) {
+            case TABULEIRO:
+                valorAluguel *= 1.5;
+                break;
+            case CARTAS:
+                valorAluguel *= 1.2;
+                break;
+        }
+        // Adiciona valor baseado no número de peças
+        valorAluguel += (numeroPecas * 0.1);
+        if(tipo == TipoMesa.TABULEIRO){
+            valorAluguel = valorAluguel * numeroPecas;
+        }else{
+            valorAluguel = valorAluguel * 1.2;
+        }
+
+        return valorAluguel;
     }
 }
