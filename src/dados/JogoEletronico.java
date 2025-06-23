@@ -20,6 +20,20 @@ public class JogoEletronico extends Jogo {
 
     @Override
     public double calculaAluguel() {
-        return 0;
+        double valorAluguel = getValorBase();
+
+        // Aplica multiplicador baseado no tipo de jogo eletrônico
+        switch (tipo) {
+            case AVENTURA:
+                valorAluguel *= 1.5;
+                break;
+            case ESTRATEGIA:
+                valorAluguel *= 1.15;
+                break;
+            case SIMULACAO:
+                valorAluguel *= 1.25;
+                break;
+        }
+        return valorAluguel;
     }
 }

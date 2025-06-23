@@ -1,6 +1,9 @@
 package dados;
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -222,33 +225,59 @@ public class FormularioAluguel extends JFrame {
     public void selecionarCliente(){
         //percorre a treemap de clientes e acha o cliente com o nome
         String nomeCliente = (String) campoCliente.getSelectedItem();
-        if (nomeCliente == null) return;
-
-        for (Cliente cliente : clientela.getClientela().values()) {
-            if (cliente.getNome().equals(nomeCliente)) {
-                clienteSelecionado = cliente;
-                areaTexto.setText("Cliente selecionado:\n" + cliente.getNome()+" - "+ cliente.getNumero());
-                return;
-            }
-        }
+        clienteSelecionado = clientela.getClienteNome(nomeCliente);
+        areaTexto.setText("Cliente selecionado:\n" + clienteSelecionado.getNome()+" - "+ clienteSelecionado.getNumero());
     }
 
     public void selecionarJogo(){
         //percorre a treemap de jogos e acha o jogo pelo nome
         String nomeJogo = (String) campoJogo.getSelectedItem();
-        if (nomeJogo == null) return;
-
-        for (Jogo jogo : catalogo.getCatalogo().values()) {
-            if (jogo.getNome().equals(nomeJogo)) {
-                jogoSelecionado = jogo;
-                areaTexto.setText("Jogo selecionado:\n" + jogo.getNome());
-                return;
-            }
-        }
+        jogoSelecionado = catalogo.getJogoNome(nomeJogo);
+        areaTexto.setText("Jogo selecionado:\n" + jogoSelecionado.getNome());
     }
 
     public void cadastrarAluguel(){
         //recebe as infos informadas e verifica e manda pro alugueis.addAluguel()
+        String nomeCliente = (String) campoCliente.getSelectedItem();
+        String nomeJogo = (String) campoJogo.getSelectedItem();
+
+        try {
+            int identificador = Integer.parseInt(campoTextoId.getText());
+            String dataString = campoTextoData.getText();
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Cliente cliente = clientela.getClienteNome(nomeCliente);
+            Jogo jogo = catalogo.getJogoNome(nomeJogo);
+            try{
+                Date dataInicial = formato.parse(dataString);
+                try {
+                    int periodo = Integer.parseInt(campoTextoPeriodo.getText());
+                    if(cliente == null || jogo == null){
+                        if(cliente != null && jogo == null){
+                        areaTexto.append("Jogo inválido\n");
+                        }
+                        if(cliente == null && jogo != null) {
+                            areaTexto.append("Cliente inválido\n");
+                        }
+                    }else{
+                        Aluguel aluguel = new Aluguel(identificador, dataInicial, periodo, cliente, jogo);
+                        if(alugueis.addAluguel(aluguel)){
+                            limparCampos();
+                            areaTexto.setText("Aluguel cadastrado com sucesso.\n");
+                        }else{
+                            areaTexto.append("Este Identificador ja foi selecionado.\n");
+                            campoTextoId.setText("");
+                        }
+
+                    }
+                }catch(NumberFormatException e){
+                    areaTexto.append("O campo \"Periodo\" esta vazio.\n");
+                }
+            } catch(ParseException e) {
+                areaTexto.append("O campo \"Data inicial\" não foi corretamente preenchido.\n");
+            }
+        }catch(Exception e) {
+            areaTexto.append("O campo \"Identificador\" esta vazio.\n");
+        }
     }
 
     public void mostrarDadosAluguel(){
